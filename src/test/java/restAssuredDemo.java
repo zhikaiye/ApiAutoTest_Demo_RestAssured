@@ -20,11 +20,12 @@ import static org.hamcrest.Matchers.lessThan;
 public class restAssuredDemo {
     @Test
     public void testdemo1() {
-        //todo:dafdafda
-
-        when().get("http://m.api.4399.cn//android/box/game/v3.0/search-hotWords.html").then().statusCode(200);
-        when().request("get", "http://m.api.4399.cn//android/box/game/v3.0/search-hotWords.html").then().statusCode(200);
-
+        when()
+                .get("http://m.api.4399.cn//android/box/game/v3.0/search-hotWords.html")
+                .then().log().all().statusCode(200);
+        when()
+                .request("get", "http://m.api.4399.cn//android/box/game/v3.0/search-hotWords.html")
+                .then().log().all().statusCode(200);
     }
 
     @Test
@@ -35,7 +36,10 @@ public class restAssuredDemo {
     @Test
     public void paramGetTest() {
 
-        given().log().all().param("word", "mp3").when().log().all().get("https://www.baidu.com/s").then().statusCode(200);
+        given().log().all()
+                .param("word", "mp3")
+                .when().get("http://www.baidu.com/s")
+                .then().log().all().statusCode(200);
 
     }
 
@@ -302,5 +306,20 @@ public class restAssuredDemo {
         for (Integer o : list2){
             System.out.println(o);
         }
+    }
+
+    @Test
+    public void jsonPathdemo1(){
+        when().get("http://localhost:8082/lotto.json").then()
+                .body("lotto.winners.find{winners -> winners.winnerId>23}.winnerId",equalTo(54));
+    }
+
+    @Test
+    public void xmlPathDemo(){
+        when().get("http://localhost:8082/shopping.xml").then()
+                .body("shopping.category.item[0].name",equalTo("Chocolate"))
+                .body("shopping.category.item.size()",equalTo(5))
+                .body("shopping.category.findAll { it.@type == 'groceries' }.size()",equalTo(1));
+
     }
 }
